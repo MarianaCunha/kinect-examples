@@ -1,11 +1,10 @@
 /*
-pose.addRule(SimpleOpenNI.LEFT_HAND, SkeletonPoser.ABOVE, SimpleOpenNI.LEFT_ELBOW);
+Adapted from "Making Things See" book.
+ 
+ pose.addRule(SimpleOpenNI.LEFT_HAND, SkeletonPoser.ABOVE, SimpleOpenNI.LEFT_ELBOW);
  pose.addRule(SimpleOpenNI.LEFT_HAND, SkeletonPoser.LEFT_OF, SimpleOpenNI.LEFT_ELBOW);
  
- if(pose.check(userId)){
- // play the song
- // with debounce
- }*/
+ */
 
 class SkeletonPoser {
   KinectPV2 context;
@@ -75,10 +74,10 @@ class PoseRule {
 
       switch(jointRelation) {
       case ABOVE:
-        result = (fromJointVector.getY() > toJointVector.getY());
+        result = (fromJointVector.getY() < toJointVector.getY());
         break;
       case BELOW:
-        result = (fromJointVector.getY() < toJointVector.getY());
+        result = (fromJointVector.getY() > toJointVector.getY());
         break;
       case LEFT_OF:
         result = (fromJointVector.getX() < toJointVector.getX());

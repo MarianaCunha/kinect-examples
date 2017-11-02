@@ -21,14 +21,14 @@ https://msdn.microsoft.com/en-us/library/microsoft.kinect.jointtype.aspx
  KinectPV2.JointType_AnkleRight
  KinectPV2.JointType_FootRight
  
-*/
+ */
 
 import KinectPV2.KJoint;
 import KinectPV2.*;
 
 KinectPV2 kinect;
 
-SkeletonPoser pose;
+SkeletonPoser poseArmsUp, poseArmsOpen;
 
 void setup() {
   //size(1920, 1080, P3D);
@@ -43,10 +43,17 @@ void setup() {
 
 
   // initialize the pose object
-  pose = new SkeletonPoser(kinect);
-  // rules for the right arm
-  pose.addRule(KinectPV2.JointType_HandRight, PoseRule.ABOVE, KinectPV2.JointType_ElbowRight);
-  pose.addRule(KinectPV2.JointType_HandLeft, PoseRule.BELOW, KinectPV2.JointType_ElbowLeft);
+  poseArmsUp = new SkeletonPoser(kinect);
+  poseArmsUp.addRule(KinectPV2.JointType_HandRight, PoseRule.ABOVE, KinectPV2.JointType_ElbowRight);
+  poseArmsUp.addRule(KinectPV2.JointType_HandRight, PoseRule.LEFT_OF, KinectPV2.JointType_ElbowRight);
+  poseArmsUp.addRule(KinectPV2.JointType_HandLeft, PoseRule.ABOVE, KinectPV2.JointType_ElbowLeft);
+  poseArmsUp.addRule(KinectPV2.JointType_HandLeft, PoseRule.RIGHT_OF, KinectPV2.JointType_ElbowLeft);
+
+  poseArmsOpen = new SkeletonPoser(kinect);
+  poseArmsOpen.addRule(KinectPV2.JointType_HandRight, PoseRule.ABOVE, KinectPV2.JointType_ElbowRight);
+  poseArmsOpen.addRule(KinectPV2.JointType_HandLeft, PoseRule.ABOVE, KinectPV2.JointType_ElbowLeft);
+  poseArmsOpen.addRule(KinectPV2.JointType_HandRight, PoseRule.RIGHT_OF, KinectPV2.JointType_ElbowRight);
+  poseArmsOpen.addRule(KinectPV2.JointType_HandLeft, PoseRule.LEFT_OF, KinectPV2.JointType_ElbowLeft);
 }
 
 void draw() {
@@ -62,17 +69,21 @@ void draw() {
     if (skeleton.isTracked()) {
       KJoint[] joints = skeleton.getJoints();
 
-      color col  = skeleton.getIndexColor();
-      fill(col);
-      stroke(col);
+      //color col  = skeleton.getIndexColor();
+      //fill(col);
+      //stroke(col);
       // check to see if the user
       // is in the pose
-      if (pose.check(i)) {
+      if (poseArmsUp.check(i)) {
         //if they are, set the color white
-        stroke(255);
+        strokeWeight(5);
+        stroke(0, 255, 0);
+      } else if (poseArmsOpen.check(i)) {
+        strokeWeight(5);
+        stroke(0, 0, 255);
       } else {
-
-        stroke(255, 0, 0);
+        strokeWeight(1);
+        stroke(255);
       }
 
       drawBody(joints);
